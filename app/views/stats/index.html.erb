@@ -1,0 +1,117 @@
+<%= form_tag("/stats/index", method: "post") do %>
+  <div class="form-group">
+    <label for="city" class="col-md-2">Enter the city name:</label>
+    <div class=col-md-3>
+      <%= text_field_tag 'city_name', @city, placeholder: 'Enter city name:', class: 'form-control', id: 'emailText' %>
+    </div>
+  </div>
+  <div class="form-group">
+		<%= submit_tag "Submit", class: "btn btn-primary" %>
+	</div>
+	<br/><br/><br/>
+<% end %>
+<h2 style="text-align: center;"><%= @city.capitalize %> weather</h2>
+<div id="chart_div"></div>
+<div class="row">
+  <div class="col-md-6">
+    <table class="table table-stripped">
+      <thead>
+        <tr>
+          <th class="col-md-2">DayTime</th>
+          <th class="col-md-2">Min Temp</th>
+          <th class="col-md-2">Max Temp</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @min_max.each_slice(2) do |a, b| %>
+          <tr>
+            <td class="col-md-1"><%= a[0].strftime("%d/%m/%Y") %></td>
+            <td class="col-md-2"><%= a[1] %> @ <%= a[0].strftime("%I:%M %p") %></td>
+            <td class="col-md-2"><%= b[1] %> @ <%= b[0].strftime("%I:%M %p") %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <div class="col-md-6">
+    <table class="table table-stripped">
+      <thead>
+        <tr>
+          <th class="col-md-2">DayTime</th>
+          <th class="col-md-2">Temperature</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @sorted.each do |day_time, temperature| %>
+          <tr>
+            <td class="col-md-2"><%= day_time.strftime("%d/%m/%Y at %I:%M%p") %></td>
+            <td class="col-md-2"><%= temperature %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<script>
+  google.charts.load('current', {
+    packages: ['corechart', 'line']
+  });
+
+  google.charts.setOnLoadCallback(drawAxisTickColors);
+
+  function drawAxisTickColors() {
+    var data = new google.visualization.DataTable();
+    var temp_data = <%= @hourly_data_gchart %>;
+    var arr = temp_data.map(function(d_t, index) {
+      return [new Date(d_t[0] * 1000), d_t[1]];
+    });
+    data.addColumn('datetime', 'DateTime');
+    data.addColumn('number', 'Temperature');
+    data.addRows(arr);
+
+    var options = {
+    	width: 1200,
+      height: 700,
+      legend: {position: 'none'},
+      chartArea: {
+        width: '85%'
+      },
+      hAxis: {
+      	format: 'd/M/yy',
+        title: 'DateTime',
+        textStyle: {
+          color: '#01579b',
+          fontSize: 20,
+          fontName: 'Arial',
+          bold: true,
+          italic: true
+        },
+        titleTextStyle: {
+          color: '#01579b',
+          fontSize: 16,
+          fontName: 'Arial',
+          bold: true,
+          italic: true
+        }
+      },
+      vAxis: {
+        title: 'Temperature',
+        textStyle: {
+          color: '#1a237e',
+          fontSize: 20,
+          bold: false
+        },
+        titleTextStyle: {
+          color: '#1a237e',
+          fontSize: 16,
+          bold: true
+        }
+      },
+      colors: ['#a52714', '#097138']
+    };
+    var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+    chart.draw(data, options);
+  };
+</script>
