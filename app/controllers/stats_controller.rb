@@ -1,9 +1,6 @@
 class StatsController < ApplicationController
   def index
-    if params["city_name"].nil?
-      lat, long = 12.9715987, 77.5945627
-      @city = "Bengaluru"
-    elsif (lat, long = Geocoder.coordinates(params["city_name"])).nil?
+    if params["city_name"].nil? || (lat, long = Geocoder.coordinates(params["city_name"])).nil?
       lat, long = 12.9715987, 77.5945627
       @city = "Bengaluru"
     else
