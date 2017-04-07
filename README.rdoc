@@ -1,28 +1,10 @@
-== README
+Weather Details:
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Heroku link: https://liftoff-weather.herokuapp.com/
 
-Things you may want to cover:
+MIN and MAX temperature of the day and time of occurrence.
+Array of temperature in increasing order of temperature along with time when it occurred.
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+A HTML page showing what was the min and max temperature and at what time it occurred.
+A graph which represents change in temperature in increasing order.
+X Axis -> temperature and Y Axis -> Time of the day.
